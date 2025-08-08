@@ -6,80 +6,110 @@
     <title>AI Law & Policy Analyzer</title>
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles from the original React component */
+        /* --- Base Styles & Theme --- */
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #e2e8f0; /* slate-200 */
         }
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(10px); }
+
+        /* --- Glassmorphism Card Style --- */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5); /* slate-800 with 50% opacity */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* --- Custom Animations --- */
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade-in {
-            animation: fade-in 0.5s ease-out forwards;
+        .animate-fade-in-up {
+            animation: fade-in-up 0.6s ease-out forwards;
         }
-        /* Styles for prose class to format the output text */
-        .prose h1, .prose h2, .prose h3 { color: #334155; }
-        .prose strong { color: #475569; }
-        .prose p { margin-bottom: 1em; }
-        .prose ul { list-style-position: inside; }
-        .prose li { margin-bottom: 0.5em; }
+
+        /* --- Prose styles for formatted output --- */
+        .prose {
+            color: #cbd5e1; /* slate-300 */
+        }
+        .prose h1, .prose h2, .prose h3 {
+            color: #f8fafc; /* slate-50 */
+            border-bottom: 1px solid #334155; /* slate-700 */
+            padding-bottom: 0.5rem;
+        }
+        .prose strong {
+            color: #93c5fd; /* blue-300 */
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .prose li {
+            margin-bottom: 0.5em;
+        }
+        .prose a {
+            color: #5eead4; /* teal-300 */
+        }
     </style>
 </head>
-<body class="bg-gray-100">
+<body class="min-h-screen">
 
     <!-- Header Section -->
-    <header class="bg-gray-900 text-white p-6 shadow-lg">
+    <header class="py-6">
         <div class="container mx-auto text-center">
-            <h1 class="text-4xl font-bold tracking-tight">AI Law & Policy Analyzer</h1>
-            <p class="mt-2 text-lg text-gray-300">Transforming complex legal jargon into clear, understandable insights.</p>
+            <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-500">AI Law & Policy Analyzer</h1>
+            <p class="mt-2 text-lg text-slate-400">Your personal AI legal assistant.</p>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto p-4 sm:p-6 md:p-8">
-        <div class="bg-white p-8 rounded-xl shadow-2xl max-w-4xl mx-auto">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Enter Legal Text</h2>
-            <p class="text-gray-600 mb-6">
-                Paste the content of a bill, judgment, or policy document below. The AI will break it down for you.
+    <main class="container mx-auto p-4">
+        <div class="glass-card p-6 sm:p-8 rounded-2xl max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-slate-100 mb-4">Paste Document Text</h2>
+            <p class="text-slate-400 mb-6">
+                Provide the content of a bill, judgment, or policy. The AI will distill it into a simple, clear analysis.
             </p>
             
             <!-- Text Input Area -->
             <textarea
                 id="inputText"
                 placeholder="Paste your legal text here..."
-                class="w-full h-64 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 resize-y"
+                class="w-full h-64 p-4 bg-slate-900/80 border border-slate-700 rounded-lg text-slate-300 focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition duration-200 resize-y"
             ></textarea>
 
             <!-- Analyze Button -->
             <div class="mt-6 text-center">
                 <button
                     id="analyzeButton"
-                    class="bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    class="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold text-white bg-gradient-to-r from-fuchsia-600 to-cyan-600 rounded-lg shadow-lg hover:shadow-fuchsia-500/50 focus:outline-none focus:ring-4 focus:ring-fuchsia-500/50 disabled:bg-slate-500 disabled:shadow-none transition-all duration-300 transform hover:scale-105"
                 >
-                    Analyze Text
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 transition-transform group-hover:rotate-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.293 2.293a1 1 0 010 1.414L11 12l4.293 4.293a1 1 0 01-1.414 1.414L10 13.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 12 4.293 7.707a1 1 0 011.414-1.414L10 10.586l4.293-4.293a1 1 0 011.414 0z" /></svg>
+                    <span id="buttonText">Analyze Text</span>
                 </button>
             </div>
         </div>
 
         <!-- Results Section -->
         <div id="resultContainer" class="max-w-4xl mx-auto mt-10">
-            <!-- Loading spinner will be injected here -->
-            <!-- Error message will be injected here -->
-            <!-- Analysis result will be injected here -->
+            <!-- Dynamic content will be injected here -->
         </div>
     </main>
     
     <!-- Footer Section -->
-    <footer class="bg-gray-900 text-white py-6 mt-12">
-        <div class="container mx-auto text-center px-4">
-            <p class="text-gray-400 font-semibold">
-                Portfolio Punchline: "Built an AI-powered tool that translates complex policies and court judgments into actionable, plain-language insights for citizens and researchers."
+    <footer class="text-center py-8 mt-12">
+        <div class="container mx-auto px-4">
+             <p class="text-slate-400 font-semibold text-sm">
+                Portfolio Punchline: "Built an AI-powered tool that translates complex policies and court judgments into actionable, plain-language insights."
             </p>
-            <p class="text-sm text-gray-500 mt-2">
+            <p class="text-xs text-slate-500 mt-2">
                 Powered by Google Gemini
             </p>
         </div>
@@ -89,16 +119,17 @@
         // --- DOM Element References ---
         const inputTextElem = document.getElementById('inputText');
         const analyzeButton = document.getElementById('analyzeButton');
+        const buttonText = document.getElementById('buttonText');
         const resultContainer = document.getElementById('resultContainer');
 
         // --- Helper Function to call Gemini API ---
         const callGeminiAPI = async (prompt, retries = 3, delay = 1000) => {
-            const apiKey = ""; // Leave as-is, Canvas will handle it
+            const apiKey = ""; // This is handled by the Canvas environment.
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{ role: "user", parts: [{ text: prompt }] }],
-                generationConfig: { temperature: 0.5, topK: 1, topP: 1 }
+                generationConfig: { temperature: 0.6, topK: 1, topP: 1 }
             };
 
             for (let i = 0; i < retries; i++) {
@@ -109,18 +140,21 @@
                         body: JSON.stringify(payload)
                     });
 
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        throw new Error(`HTTP error! status: ${response.status}, body: ${errorBody}`);
+                    }
 
                     const result = await response.json();
                     
                     if (result.candidates && result.candidates[0]?.content?.parts?.[0]?.text) {
                         return result.candidates[0].content.parts[0].text;
                     } else {
-                        throw new Error("Invalid response structure from API.");
+                        throw new Error("Invalid response structure from API. Full response: " + JSON.stringify(result));
                     }
                 } catch (error) {
-                    console.error(`Attempt ${i + 1} failed:`, error);
-                    if (i === retries - 1) throw error;
+                    console.error(`API call attempt ${i + 1} failed:`, error);
+                    if (i === retries - 1) throw error; // Throw error on last retry
                     await new Promise(res => setTimeout(res, delay));
                     delay *= 2; // Exponential backoff
                 }
@@ -131,35 +165,37 @@
         const showLoading = () => {
             resultContainer.innerHTML = `
                 <div class="flex flex-col items-center justify-center p-8">
-                    <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500"></div>
-                    <p class="mt-4 text-gray-400">Analyzing document...</p>
+                    <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-fuchsia-500"></div>
+                    <p class="mt-4 text-slate-400">Analyzing document...</p>
                 </div>
             `;
         };
 
         const showError = (message) => {
             resultContainer.innerHTML = `
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-md" role="alert">
-                    <p class="font-bold">An Error Occurred</p>
-                    <p>${message}</p>
+                <div class="glass-card p-6 rounded-lg border-red-500/50 animate-fade-in-up" role="alert">
+                    <h3 class="font-bold text-red-400 text-lg">An Error Occurred</h3>
+                    <p class="text-red-300 mt-2">${message}</p>
                 </div>
             `;
         };
 
         const showResult = (result) => {
-            // Basic markdown-to-HTML conversion for headings and bold text
+            // Enhanced markdown-to-HTML conversion
             let formattedResult = result
                 .replace(/^### (.*$)/gim, '<h3 class="text-xl font-semibold mt-4 mb-2">$1</h3>')
                 .replace(/^## (.*$)/gim, '<h2 class="text-2xl font-bold mt-6 mb-3">$1</h2>')
                 .replace(/^# (.*$)/gim, '<h1 class="text-3xl font-bold mt-6 mb-4">$1</h1>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\n/g, '<br>');
+                .replace(/^\* (.*$)/gim, '<li>$1</li>') // For bullet points starting with *
+                .replace(/^(<li>.*<\/li>)$/gim, '<ul>$1</ul>') // Wrap list items in <ul>
+                .replace(/<\/ul>\n<ul>/gim, ''); // Merge adjacent lists
 
             resultContainer.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-inner animate-fade-in">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b-2 pb-2 border-gray-200">Analysis Complete</h2>
-                    <div class="prose prose-lg max-w-none text-gray-700">
-                        ${formattedResult}
+                <div class="glass-card p-6 sm:p-8 rounded-2xl animate-fade-in-up">
+                    <h2 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-fuchsia-500 to-cyan-500 mb-4 border-b-2 border-slate-700 pb-3">Analysis Complete</h2>
+                    <div class="prose prose-lg max-w-none mt-6">
+                        ${formattedResult.replace(/\n/g, '<br>').replace(/<br><ul>/g, '<ul>').replace(/<\/ul><br>/g, '</ul>')}
                     </div>
                 </div>
             `;
@@ -175,15 +211,21 @@
 
             // Disable button and show loader
             analyzeButton.disabled = true;
-            analyzeButton.textContent = 'Analyzing...';
+            buttonText.textContent = 'Analyzing...';
             showLoading();
 
             const prompt = `
-                Analyze the following legal or policy document. Your task is to act as a legal expert simplifying complex text for the general public.
-                Provide a clear, plain-language summary. Break down the key points, explain the potential impact on citizens or relevant parties, and highlight any actionable items or important dates.
-                Structure your output with clear headings (e.g., using '##' for main sections and '###' for subsections). Use markdown for formatting like bold text with **.
+                Analyze the following legal or policy document. Act as an expert legal analyst simplifying complex text for a layperson.
+                Your analysis must be clear, concise, and structured.
+                
+                **OUTPUT FORMATTING RULES:**
+                - Use markdown for structure.
+                - Use '##' for main section headings (e.g., "## Key Takeaways").
+                - Use '###' for sub-section headings (e.g., "### Impact on Citizens").
+                - Use bold text with ** for emphasis on key terms.
+                - Use unordered lists with a single '*' for bullet points.
 
-                Here is the document:
+                **DOCUMENT TO ANALYZE:**
                 ---
                 ${inputText}
                 ---
@@ -194,17 +236,16 @@
                 showResult(result);
             } catch (err) {
                 console.error("Failed to get analysis from API:", err);
-                showError("Sorry, we couldn't analyze the document. The server might be busy. Please try again later.");
+                showError("Sorry, we couldn't analyze the document. The server might be busy or an API error occurred. Please check the console for details and try again later.");
             } finally {
                 // Re-enable button
                 analyzeButton.disabled = false;
-                analyzeButton.textContent = 'Analyze Text';
+                buttonText.textContent = 'Analyze Text';
             }
         };
 
         // --- Event Listener ---
         analyzeButton.addEventListener('click', handleAnalyze);
-
     </script>
 </body>
 </html>
